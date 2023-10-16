@@ -1,0 +1,7 @@
+<svg width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+ <path d="m8 2.023e-5c-4.4094 0-8 3.5906-8 8 0 4.4094 3.5906 8 8 8 4.4094 0 8-3.5906 8-8 0-4.4094-3.5906-8-8-8z" color="#000000" enable-background="new" fill="#0f8420" stroke-dashoffset=".8" stroke-width="1.5"/>
+ <rect x="1.3899e-5" y="1.0332e-5" width="16" height="16" color="#000000" enable-background="new" fill="none" stroke-dasharray="1.49999841, 1.49999841" stroke-dashoffset=".6" stroke-width="1.5"/>
+ <g transform="rotate(45 452.88 -260.27)" enable-background="new">
+  <path transform="rotate(-45 452.88 -260.27)" d="m7 4v3h-3v2h3v3h2v-3h3v-2h-3v-3z" color="#000000" color-rendering="auto" dominant-baseline="auto" enable-background="new" fill="#fff" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;isolation:auto;mix-blend-mode:normal;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+ </g>
+</svg>
