@@ -1,3 +1,5 @@
 pyqt5==5.15.0
 pillow
 openai-whisper
+pyinstaller
+appdirs

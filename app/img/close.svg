@@ -1,0 +1,8 @@
+<svg width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <path d="m8 2.023e-5c-4.4094 0-8 3.5906-8 8 0 4.4094 3.5906 8 8 8 4.4094 0 8-3.5906 8-8 0-4.4094-3.5906-8-8-8z" color="#000000" enable-background="new" fill="#c7162b" stroke-dashoffset=".8" stroke-width="1.5"/>
+ <rect x="1.3899e-5" y="1.0332e-5" width="16" height="16" color="#000000" enable-background="new" fill="none" stroke-dasharray="1.49999841, 1.49999841" stroke-dashoffset=".6" stroke-width="1.5"/>
+ <g transform="translate(-320 -236)" enable-background="new" fill="none" stroke="#fff" stroke-dashoffset=".8" stroke-width="1.5">
+  <path d="m325 241 6 6" color="#000000" enable-background="new"/>
+  <path d="m331 241-6 6" color="#000000" enable-background="new"/>
+ </g>
+</svg>

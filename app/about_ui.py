@@ -37,7 +37,7 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "About"))
         self.label.setText(_translate("Form", "<html><head/><body><p align=\"center\"><img src=\":/ui/img/whisper-450.png\" width=\"450\" height=\"300\"/></p></body></html>"))
         self.aboutLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><a href=\"https://github.com/mervick/whisper-qt\"><span style=\" font-size:10pt; text-decoration: underline; color:#ffffff;\">Whisper QT 1.0</span></a></p><p align=\"center\"><span style=\" font-size:10pt; color:#ffffff;\">Licensed under MIT and LGPL v3</span></p><p align=\"center\"><span style=\" font-size:9pt; color:#ffffff;\">Copyright © 2023 OpenAI, Andrey Izman and others, see COPYING.txt</span></p></body></html>"))
-from . import resources
+
 
 
 if __name__ == "__main__":

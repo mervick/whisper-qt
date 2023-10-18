@@ -11,5 +11,6 @@
     <file>img/remove.svg</file>
     <file>img/cancel-white.svg</file>
     <file>img/entry-delete.svg</file>
+    <file>img/close.svg</file>
   </qresource>
 </RCC>

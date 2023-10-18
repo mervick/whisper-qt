@@ -56,14 +56,11 @@
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
-<!--           <enum>Qt::Horizontal</enum>-->
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-<!--            <width>0</width>-->
             <height>40</height>
-<!--            <height>0</height>-->
            </size>
           </property>
          </spacer>
@@ -136,7 +133,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="chooseDirLabel">
             <property name="text">
              <string>Output directory:</string>
             </property>
@@ -159,7 +156,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
-             <widget class="QLabel" name="label_4">
+             <widget class="QLabel" name="modelLabel">
               <property name="text">
                <string>model:</string>
               </property>
@@ -173,7 +170,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="languageLabel">
               <property name="text">
                <string>language:</string>
               </property>
@@ -187,7 +184,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QLabel" name="labelFormat">
+             <widget class="QLabel" name="formatLabel">
               <property name="text">
                <string>format:</string>
               </property>
@@ -201,7 +198,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QLabel" name="label">
+             <widget class="QLabel" name="deviceLabel">
               <property name="text">
                <string>device:</string>
               </property>
@@ -215,7 +212,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="taskLabel">
               <property name="text">
                <string>task:</string>
               </property>
