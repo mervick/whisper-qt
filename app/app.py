@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from subprocess import run
 import sys
 import time
 from threading import Thread
@@ -277,6 +278,7 @@ class AppWindow(CenteredWindow):
     execThread = None
     spacer1 = None
     spacer2 = None
+    has_ffmpeg = True
     downloadProgress = None
     downloadProgressSignal = pyqtSignal(int, int, str, str, str, str)
     updateProgressSignal = pyqtSignal(int, int)
@@ -284,21 +286,28 @@ class AppWindow(CenteredWindow):
     reloadListSignal = pyqtSignal()
     removeFileSignal = pyqtSignal(str)
     execNextSignal = pyqtSignal()
+    errorSignal = pyqtSignal(object)
 
     def __init__(self):
         super(AppWindow, self).__init__()
+        self.initMenu()
         # setupUI(self, 'app')
-        Form = QWidget()
         self.ui = app_ui.Ui_Form()
         self.ui.setupUi(self)
 
         self.setWindowTitle('Whisper QT')
         self.initDefaults()
-        self.initMenu()
         self.initUi()
         self.initSignals()
         self.show()
         self.center()
+
+        cmd = ["ffmpeg", "-version"]
+        try:
+            run(cmd, capture_output=True, check=True).stdout
+        except:
+            self.has_ffmpeg = False
+            MessageBox('Fatal error', info='ffmpeg is not installed! ffmpeg is required to be installed')
 
     def initDefaults(self):
         self.model = 'small'
@@ -355,6 +364,7 @@ class AppWindow(CenteredWindow):
         self.downloadProgressSignal.connect(self.updateDownloadProgress)
         self.updateProgressSignal.connect(self.updateProgress)
         self.reloadListSignal.connect(self.reloadList)
+        self.errorSignal.connect(self.on_error)
 
     def modelChanged(self, index):
         self.model = MODELS[index]
@@ -390,7 +400,6 @@ class AppWindow(CenteredWindow):
             caption="Select one or more files to open",
             # __DIR__,
             filter=f'Audio files ({audioFormats});;All files (*.*)')
-        print(files)
         if files:
             self.add_files = files
             self.updateList()
@@ -495,7 +504,7 @@ class AppWindow(CenteredWindow):
         self.updateList()
 
     def run(self):
-        if not self.running:
+        if self.has_ffmpeg and not self.running:
             self.running = True
             # self.ui.runBtn.setEnabled(False)
             self.setEnabledUI(False)
@@ -515,11 +524,11 @@ class AppWindow(CenteredWindow):
 
     def execNext(self):
         if self.files:
-            print('run next')
+            # print('run next')
             self.execThread = Thread(target=self.exec)
             self.execThread.start()
         else:
-            print('done')
+            # print('done')
             self.running = False
             self.setEnabledUI(True)
             MessageBox('Successfully completed', icon=QMessageBox.Information)
@@ -559,22 +568,33 @@ class AppWindow(CenteredWindow):
 
         self.progressBar = progressBar
 
+    def on_error(self, error):
+        print(error)
+        self.running = False
+        self.setEnabledUI(True)
+        self.reloadListSignal.emit()
+        MessageBox('Error', info=str(error))
+
     def exec(self):
         if self.files:
+            def on_err(error):
+                self.errorSignal.emit(error)
             try:
-                # self.model = 'bad'
-                file = self.files[0]
-                self.prepareProgressSignal.emit(file)
-                self.transcribe(file)
-                self.removeFileSignal.emit(file)
-                time.sleep(0.05)
-                self.execNextSignal.emit()
-            except RuntimeError as error:
-                print('error')
-                self.running = False
-                self.setEnabledUI(True)
-                self.reloadListSignal.emit()
-                MessageBox('Error', info=str(error))
+                try:
+                    file = self.files[0]
+                    self.prepareProgressSignal.emit(file)
+                    self.transcribe(file)
+                    self.removeFileSignal.emit(file)
+                    time.sleep(0.05)
+                    self.execNextSignal.emit()
+                except FileNotFoundError as err:
+                    on_err(err)
+                except AssertionError as err:
+                    on_err(err)
+                except RuntimeError as err:
+                    on_err(err)
+            except Exception as err:
+                on_err(err)
 
     def transcribe(self, file):
         file_name = os.path.basename(file)
