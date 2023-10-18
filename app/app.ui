@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Form</class>
- <widget class="QWidget" name="Form">
+ <widget class="QMainWindow" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,14 +14,6 @@
    <string>Form</string>
   </property>
   <widget class="QWidget" name="FormArea">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>600</width>
-     <height>328</height>
-    </rect>
-   </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="leftMargin">
      <number>6</number>
@@ -41,18 +33,14 @@
        <enum>QLayout::SetMinAndMaxSize</enum>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="tableLayout">
-<!--        <item>-->
-<!--         <widget class="QTableWidget" name="tableWidget"/>-->
-<!--        </item>-->
-       </layout>
+       <layout class="QVBoxLayout" name="tableLayout"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
-        <item name="verticalSpacerItem1">
+        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -117,7 +105,7 @@
           </item>
          </layout>
         </item>
-        <item name="verticalSpacerItem2">
+        <item>
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>

@@ -16,7 +16,6 @@ class Ui_Form(object):
         Form.setObjectName("Form")
         Form.resize(612, 328)
         self.FormArea = QtWidgets.QWidget(Form)
-        self.FormArea.setGeometry(QtCore.QRect(0, 0, 600, 328))
         self.FormArea.setObjectName("FormArea")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.FormArea)
         self.verticalLayout_2.setContentsMargins(6, 6, 6, 6)
@@ -121,6 +120,7 @@ class Ui_Form(object):
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout_6.addLayout(self.verticalLayout)
         self.verticalLayout_2.addLayout(self.verticalLayout_6)
+        Form.setCentralWidget(self.FormArea)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -142,7 +142,7 @@ class Ui_Form(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
+    Form = QtWidgets.QMainWindow()
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
