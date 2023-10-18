@@ -22,6 +22,10 @@ __author__ = 'Andrey Izman'
 __email__ = 'izmanw@gmail.com'
 
 __DIR__ = os.path.dirname(os.path.realpath(__file__))
+_split_dir = os.path.split(os.path.split(__DIR__)[0])
+if _split_dir[-1] == 'lib':
+    __DIR__ = _split_dir[0]
+
 DEFAULT_OUTPUT_DIR = os.path.join(__DIR__, 'output')
 MODELS_DIR = os.path.join(__DIR__, 'models')
 
@@ -398,7 +402,6 @@ class AppWindow(CenteredWindow):
         files, _ = QFileDialog.getOpenFileNames(
             parent=self,
             caption="Select one or more files to open",
-            # __DIR__,
             filter=f'Audio files ({audioFormats});;All files (*.*)')
         if files:
             self.add_files = files
@@ -624,23 +627,25 @@ class AppWindow(CenteredWindow):
         self.ui.taskLabel.setEnabled(enabled)
         self.ui.taskCombo.setEnabled(enabled)
 
+    def stopThread(self):
+        if self.execThread:
+            # threading._shutdown()
+            self.execThread._stop()
+            self.execThread = None
+
     def cancel(self):
         self.downloadProgress = None
         self.running = False
         self.setEnabledUI(True)
         self.reloadListSignal.emit()
-        if self.execThread:
-            self.execThread._stop()
+        self.stopThread()
 
     def close(self):
-        if self.execThread:
-            self.execThread._stop()
-
+        self.stopThread()
         super(AppWindow, self).close()
 
     def closeEvent(self, event):
-        if self.execThread:
-            self.execThread._stop()
+        self.stopThread()
 
 
 window = None
