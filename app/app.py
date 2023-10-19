@@ -42,8 +42,8 @@ MODELS_DIR = os.path.join(__DIR__, 'models')
 if IS_PACKAGE:  # os.name == 'nt':
     def warn(*args, **kwargs):
         pass
-    sys.modules['whisper.transcribe'].warnings.warn = warn
-    sys.modules['whisper.transcribe'].warnings.warn = warn
+    sys.modules['whisper'].warnings.warn = warn
+    sys.modules['whisper.timing'].warnings.warn = warn
     sys.modules['whisper.transcribe'].warnings.warn = warn
     stdout = open(os.devnull, 'w')
     sys.modules['tqdm.cli'].sys.stdout = stdout
