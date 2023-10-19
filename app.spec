@@ -4,7 +4,7 @@ import sys
 a = Analysis(
     ['app.py'],
     pathex=['app', 'app/ui', 'venv/lib/python3.10/site-packages', 'venv/Lib/site-packages'],
-    binaries=[('lib/ffmpeg.exe', '.')] if sys.platform in ('win32', 'cygwin', 'msys') else [],
+    binaries=[('ffmpeg.exe', '.')] if sys.platform in ('win32', 'cygwin', 'msys') else [],
     # binaries=[],
     datas=[('lib/whisper', 'whisper'), ('LICENSE.txt', '.'), ('COPYING.txt', '.')],
     # datas=[],
