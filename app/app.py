@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import contextlib
 from subprocess import run
 import sys
 import time
@@ -21,9 +22,12 @@ from app import resources
 __author__ = 'Andrey Izman'
 __email__ = 'izmanw@gmail.com'
 
+IS_PACKAGE = False
 __DIR__ = os.path.dirname(os.path.realpath(__file__))
 _split_dir = os.path.split(os.path.split(__DIR__)[0])
+
 if _split_dir[-1] == 'lib':
+    IS_PACKAGE = True
     __DIR__ = _split_dir[0]
 
 DEFAULT_OUTPUT_DIR = os.path.join(__DIR__, 'output')
@@ -34,6 +38,17 @@ MODELS_DIR = os.path.join(__DIR__, 'models')
 # def setupUI(parent, ui):
 #     parent.ui = uic.loadUi(os.path.join(__DIR__, ui + '.ui'), parent)
 
+# replace sys.stdout
+if IS_PACKAGE:  # os.name == 'nt':
+    def warn(*args, **kwargs):
+        pass
+    sys.modules['whisper.transcribe'].warnings.warn = warn
+    sys.modules['whisper.transcribe'].warnings.warn = warn
+    sys.modules['whisper.transcribe'].warnings.warn = warn
+    stdout = open(os.devnull, 'w')
+    sys.modules['tqdm.cli'].sys.stdout = stdout
+    sys.modules['tqdm.std'].sys.stdout = stdout
+    sys.modules['tqdm.utils'].sys.stdout = stdout
 
 class CenteredWindow(QMainWindow):
     def center(self):
@@ -79,6 +94,8 @@ CSS = '''
 QTableWidget QPushButton {
     color: #fff;
     background-color: #dc3545;
+    border-width: 0;
+    border-color: #dc3545;
 }
 QTableWidget QPushButton:hover {
     /* background-color: #bb2d3b; */
@@ -238,7 +255,7 @@ class TranscribeProgressBar(tqdm):
 
     def update(self, n=1):
         global window
-        # super().update(n)
+        super().update(n)
         self._current += n
 
         n = self._current
@@ -290,6 +307,7 @@ class AppWindow(CenteredWindow):
     reloadListSignal = pyqtSignal()
     removeFileSignal = pyqtSignal(str)
     execNextSignal = pyqtSignal()
+    doneSignal = pyqtSignal()
     errorSignal = pyqtSignal(object)
 
     def __init__(self):
@@ -369,6 +387,7 @@ class AppWindow(CenteredWindow):
         self.updateProgressSignal.connect(self.updateProgress)
         self.reloadListSignal.connect(self.reloadList)
         self.errorSignal.connect(self.on_error)
+        self.doneSignal.connect(self.on_done)
 
     def modelChanged(self, index):
         self.model = MODELS[index]
@@ -536,6 +555,12 @@ class AppWindow(CenteredWindow):
             self.setEnabledUI(True)
             MessageBox('Successfully completed', icon=QMessageBox.Information)
 
+    def on_done(self):
+        # print('done')
+        self.running = False
+        self.setEnabledUI(True)
+        MessageBox('Successfully completed', icon=QMessageBox.Information)
+
     def createProgress(self, file):
         emptyTWidget0 = QTableWidgetItem()
         emptyTWidget1 = QTableWidgetItem()
@@ -584,12 +609,26 @@ class AppWindow(CenteredWindow):
                 self.errorSignal.emit(error)
             try:
                 try:
-                    file = self.files[0]
-                    self.prepareProgressSignal.emit(file)
-                    self.transcribe(file)
-                    self.removeFileSignal.emit(file)
-                    time.sleep(0.05)
-                    self.execNextSignal.emit()
+                    def do_job():
+                        model = self.load_model()
+                        while True:
+                            if not self.files:
+                                self.doneSignal.emit()
+                                break
+                            file = self.files[0]
+                            self.prepareProgressSignal.emit(file)
+                            self.transcribe(file, model)
+                            self.removeFileSignal.emit(file)
+                            time.sleep(0.05)
+                            # self.execNextSignal.emit()
+
+                    if IS_PACKAGE:
+                        with (contextlib.redirect_stdout(open(os.devnull, 'w')),
+                              contextlib.redirect_stderr(open(os.devnull, 'w'))):
+                            do_job()
+                    else:
+                        do_job()
+
                 except FileNotFoundError as err:
                     on_err(err)
                 except AssertionError as err:
@@ -598,13 +637,17 @@ class AppWindow(CenteredWindow):
                     on_err(err)
             except Exception as err:
                 on_err(err)
+        else:
+            self.doneSignal.emit()
 
-    def transcribe(self, file):
+    def load_model(self):
+        return load_model(self.model, device=self.device, download_root=MODELS_DIR)
+
+    def transcribe(self, file, model):
         file_name = os.path.basename(file)
         name = os.path.splitext(file_name)[0]
         output_dir = os.path.join(self.output_dir, name)
         os.makedirs(output_dir, exist_ok=True)
-        model = load_model(self.model, device=self.device, download_root=MODELS_DIR)
         writer = get_writer(self.format, output_dir)
         language = self.language if self.language != 'auto' else None
         result = transcribe(model, file, fp16=False, verbose=None, language=language, task=self.task)
