@@ -50,6 +50,7 @@ if IS_PACKAGE:  # os.name == 'nt':
     sys.modules['tqdm.std'].sys.stdout = stdout
     sys.modules['tqdm.utils'].sys.stdout = stdout
 
+
 class CenteredWindow(QMainWindow):
     def center(self):
         qr = self.frameGeometry()
@@ -65,19 +66,13 @@ class AboutWindow(CenteredWindow):
     def __init__(self, parent):
         super(AboutWindow, self).__init__(parent)
 
+        # setupUI(self, 'about')
         self.ui = about_ui.Ui_Form()
         self.ui.setupUi(self)
 
-        # setupUI(self, 'about')
-        # self.ui = uic.loadUi('/home/izman/about.ui', self)
         self.setWindowTitle('About Whisper QT')
         self.ui.aboutLabel.mousePressEvent = self.mousePressEvent
         self.setFixedSize(450, 300)
-
-        # self.ui.label.setText(self.ui.label.text() % __version__)
-        # self.ui.label.mousePressEvent = lambda a: self.close()
-        # self.ui.okBtn.clicked.connect(self.close)
-        # self.show()
         self.center()
 
 
@@ -243,8 +238,7 @@ class DownloaderProgressBar(tqdm):
         return True
 
 
-whisper_module = sys.modules['whisper']
-whisper_module.tqdm = DownloaderProgressBar
+sys.modules['whisper'].tqdm = DownloaderProgressBar
 
 
 class TranscribeProgressBar(tqdm):
@@ -268,8 +262,7 @@ class TranscribeProgressBar(tqdm):
         return True
 
 
-transcribe_module = sys.modules['whisper.transcribe']
-transcribe_module.tqdm.tqdm = TranscribeProgressBar
+sys.modules['whisper.transcribe'].tqdm.tqdm = TranscribeProgressBar
 
 
 class MessageBox:
