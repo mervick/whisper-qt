@@ -79,7 +79,7 @@ class AboutWindow(CenteredWindow):
 LANGUAGES = ('auto', *tokenizer.LANGUAGES.values())
 MODELS = ('tiny', 'base', 'small', 'medium', 'large')
 FORMATS = ("txt", "vtt", "srt", "tsv", "json", "all")
-DEVICES = ('cpu', 'cuba')
+DEVICES = ('cpu', 'cuda')
 TASKS = ('transcribe', 'translate')
 AUDIO_EXTENSIONS = ('aac', 'wma', 'flac', 'mp3', 'mp4', 'ogg', 'cda', 'midi', 'mpga', 'opus', 'wav', '3gp', '3g2',
                     'aiff', 'au', 'pcm', 'm4a')
