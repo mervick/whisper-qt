@@ -1,6 +1,8 @@
-# Whisper QT - Whisper Crossplatform GUI Application
+# Whisper QT
+#### Whisper QT - Whisper Crossplatform GUI Application for transcribing audio files to text
 
-![01](https://github.com/mervick/whisper-qt/assets/2429298/96585787-5128-451f-b315-a5664e4c3971)
+![Whisper QT - Main window](https://github.com/mervick/whisper-qt/assets/2429298/96585787-5128-451f-b315-a5664e4c3971)  
+*[more screenshots](screenshots.md)*
 
 ## Usage:
 
