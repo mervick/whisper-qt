@@ -5,6 +5,7 @@ import contextlib
 from subprocess import run
 import sys
 import time
+from configparser import ConfigParser
 from threading import Thread
 from PyQt5.QtGui import QDesktopServices, QIcon, QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTableWidget, QTableWidgetItem, \
@@ -32,6 +33,8 @@ if _split_dir[-1] == 'lib':
 
 DEFAULT_OUTPUT_DIR = os.path.join(__DIR__, 'output')
 MODELS_DIR = os.path.join(__DIR__, 'models')
+INI_FILE = os.path.join(__DIR__, 'settings.ini')
+INI_SECTION = 'SETTINGS'
 
 
 # from PyQt5 import uic
@@ -277,6 +280,8 @@ class MessageBox:
 
 
 class AppWindow(CenteredWindow):
+    config = None
+    config_changed = True
     model = None
     language = None
     format = None
@@ -331,6 +336,36 @@ class AppWindow(CenteredWindow):
         self.device = 'cpu'
         self.task = 'transcribe'
         self.output_dir = DEFAULT_OUTPUT_DIR
+        self.readIni()
+
+    def readIni(self):
+        config = ConfigParser()
+        if os.path.isfile(INI_FILE):
+            config.read(INI_FILE)
+            model = config.get(INI_SECTION, 'model', fallback='small')
+            language = config.get(INI_SECTION, 'language', fallback='auto')
+            fmt = config.get(INI_SECTION, 'format', fallback='txt')
+            device = config.get(INI_SECTION, 'device', fallback='cpu')
+            task = config.get(INI_SECTION, 'task', fallback='transcribe')
+            self.model = model if model in MODELS else 'small'
+            self.language = language if language in LANGUAGES else 'auto'
+            self.format = fmt if fmt in FORMATS else 'txt'
+            self.device = device if device in DEVICES else 'cpu'
+            self.task = task if task in TASKS else 'transcribe'
+            self.config_changed = False
+
+    def saveIni(self):
+        if self.config_changed:
+            config = ConfigParser()
+            config.add_section(INI_SECTION)
+            config.set(INI_SECTION, 'model', self.model)
+            config.set(INI_SECTION, 'language', self.language)
+            config.set(INI_SECTION, 'format', self.format)
+            config.set(INI_SECTION, 'device', self.device)
+            config.set(INI_SECTION, 'task', self.task)
+            with open(INI_FILE, 'w') as configfile:
+                config.write(configfile)
+            self.config_changed = False
 
     def aboutDialog(self):
         win = AboutWindow(self)
@@ -384,18 +419,23 @@ class AppWindow(CenteredWindow):
 
     def modelChanged(self, index):
         self.model = MODELS[index]
+        self.config_changed = True
 
     def languageChanged(self, index):
         self.language = LANGUAGES[index]
+        self.config_changed = True
 
     def formatChanged(self, index):
         self.format = FORMATS[index]
+        self.config_changed = True
 
     def deviceChanged(self, index):
         self.device = DEVICES[index]
+        self.config_changed = True
 
     def taskChanged(self, index):
         self.task = TASKS[index]
+        self.config_changed = True
 
     def initMenu(self):
         menuBar = self.menuBar()
@@ -670,6 +710,7 @@ class AppWindow(CenteredWindow):
             self.execThread = None
 
     def cancel(self):
+        self.saveIni()
         self.downloadProgress = None
         self.running = False
         self.setEnabledUI(True)
@@ -677,10 +718,12 @@ class AppWindow(CenteredWindow):
         self.stopThread()
 
     def close(self):
+        self.saveIni()
         self.stopThread()
         super(AppWindow, self).close()
 
     def closeEvent(self, event):
+        self.saveIni()
         self.stopThread()
 
 
